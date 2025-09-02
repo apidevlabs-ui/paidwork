@@ -1,134 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paidwork - Start Earning Online</title>
-<style>
-  body {
-    margin: 0;
-    font-family: 'Inter', Arial, sans-serif;
-    background: #f0f2f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 10px;
-  }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>TaskRewards — Pay-first Tasks (Mobile Friendly)</title>
+  <meta name="description" content="Pay-first task marketplace — pay via JazzCash, verify, then unlock tasks. Mobile-first frontend demo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071018; --card:#0c1520; --muted:#9fb0c0; --text:#e9f4f6; --accent:#27c39f;
+      --accent-2:#6ad7c1; --radius:14px; --shadow:0 8px 22px rgba(0,0,0,.45);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#061018 0%, #071018 100%);color:var(--text);-webkit-font-smoothing:antialiased}
 
-  .container {
-    background: #fff;
-    padding: 25px 20px;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    text-align: center;
-  }
+    /* Layout */
+    .container{max-width:980px;margin:0 auto;padding:0 16px}
+    header{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(2,6,10,.75),rgba(2,6,10,.6));backdrop-filter:blur(6px);border-bottom:1px solid rgba(255,255,255,.03)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
+    .brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2))}
+    nav a{color:var(--text);opacity:.95;font-size:14px;margin-left:12px}
 
-  .container img {
-    width: 60px;
-    margin-bottom: 15px;
-  }
+    /* Hero */
+    .hero{padding:36px 0 16px}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(39,195,159,.08);color:var(--accent-2);font-weight:600;font-size:13px}
+    h1{font-size:clamp(22px,6.5vw,34px);margin:.6rem 0 8px;line-height:1.08}
+    p.lead{color:var(--muted);margin:0;font-size:14.5px}
 
-  h2 {
-    font-size: 22px;
-    margin-bottom: 8px;
-    color: #0A3D62;
-  }
+    /* Cards */
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border-radius:var(--radius);padding:14px;border:1px solid rgba(255,255,255,.04);box-shadow:var(--shadow)}
+    .grid{display:grid;gap:12px}
+    .col-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:720px){.col-2{grid-template-columns:1fr}}
 
-  p {
-    font-size: 15px;
-    color: #555;
-    margin-bottom: 20px;
-  }
+    .h3{font-size:15px;margin:6px 0}
+    .muted{color:var(--muted);font-size:13.5px}
 
-  form input, form button {
-    width: 100%;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));border:none;color:#05201a;font-weight:700;cursor:pointer;min-height:44px}
+    .btn.full{width:100%}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.06);color:var(--text)}
 
-  input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0,123,255,0.4);
-  }
+    /* Form */
+    .field{display:flex;flex-direction:column;gap:6px}
+    .input{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:#071620;color:var(--text);outline:none}
+    .input:focus{box-shadow:0 0 0 4px rgba(39,195,159,.12);border-color:rgba(39,195,159,.4)}
 
-  input[type="file"] {
-    padding: 6px 0;
-  }
+    /* Table / tasks */
+    .tasks{width:100%;border-collapse:separate;border-spacing:0 10px}
+    .tasks tr{background:rgba(255,255,255,.02)}
+    .tasks td{padding:10px;border-radius:10px}
 
-  button {
-    background: #007bff;  /* Bright blue */
-    color: #fff;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 16px;
-  }
+    /* Status bar & footer */
+    footer{padding:14px 0;margin-top:14px;border-top:1px solid rgba(255,255,255,.03)}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:13px}
 
-  button:hover {
-    background: #0056b3;  /* Darker blue */
-  }
+    /* Modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:18px;z-index:120}
+    .modal{width:100%;max-width:560px}
 
-  .note {
-    font-size: 13px;
-    color: #444;
-    margin-top: 10px;
-    line-height: 1.5;
-  }
+    /* Bottom nav for Android-like UX */
+    .bottom-nav{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(180deg,#07171b,#07121a);border-radius:16px;padding:8px;display:flex;gap:8px;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,.04);box-shadow:0 10px 30px rgba(0,0,0,.45);z-index:80}
+    .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;color:var(--muted);font-size:12px}
+    .bn-item.active{background:linear-gradient(135deg,rgba(39,195,159,.12),rgba(106,215,193,.06));color:var(--accent-2)}
+    .icon{width:20px;height:20px}
 
-  a {
-    display: inline-block;
-    background: #007bff;   /* Bright blue link */
-    color: #fff;           /* White text */
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: 0.3s;
-  }
-
-  a:hover {
-    background: #0056b3;   /* Darker blue */
-  }
-
-  @media (max-width: 400px) {
-    h2 { font-size: 20px; }
-    form input, form button { padding: 12px 14px; font-size: 15px; }
-    .note { font-size: 12px; }
-  }
-</style>
+    /* Utility */
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .center{text-align:center}
+  </style>
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" alt="Paidwork Logo">
-    <h2>Start Earning Online</h2>
-    <p>Welcome to Paidwork</p>
+  <header>
+    <div class="container nav">
+      <div class="brand"><span class="dot"></span> TaskRewards</div>
+      <nav>
+        <a href="#pricing">Pricing</a>
+        <a href="#verify">Verify</a>
+        <a href="#dashboard">Dashboard</a>
+      </nav>
+    </div>
+  </header>
 
-    <form>
-      <input type="email" placeholder="Email" required>
-      <input type="password" placeholder="Password" required>
-      <input type="text" placeholder="Referral Code (Required)" required>
+  <main class="container">
+    <!-- HERO -->
+    <section class="hero">
+      <span class="pill">Get paid for completing tasks</span>
+      <h1>Pay once, unlock premium tasks.</h1>
+      <p class="lead">To keep quality high we ask for a one-time access fee via <strong>JazzCash</strong>. After payment, verify with your Transaction ID to unlock the dashboard on your device.</p>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button id="ctaPay" class="btn full">Pay via JazzCash</button>
+        <a href="#verify" class="btn ghost" style="max-width:210px;display:inline-flex;align-items:center;justify-content:center">Verify Payment</a>
+      </div>
+    </section>
 
-      <p class="note">
-        Pay <strong>$2</strong> for referral code via <br>
-        JazzCash <strong>(03054444527)</strong> OR <br><br>
-        <a href="https://www.paypal.com/paypalme/paidworkcom" target="_blank">Pay with PayPal</a>
-      </p>
+    <!-- INFO CARDS -->
+    <section style="margin-top:14px" class="grid col-2">
+      <div class="card">
+        <div class="h3">Why we charge</div>
+        <p class="muted">Charging a small access fee reduces bots and increases payout quality for everyone. You typically recover the fee after completing a few tasks.</p>
+      </div>
+      <div class="card">
+        <div class="h3">JazzCash details</div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="muted">Recipient (Wallet)</div>
+            <div class="mono" id="jcNumber" style="font-weight:700">03054444527</div>
+          </div>
+          <div style="min-width:110px">
+            <button id="copyBtn" class="btn" style="padding:8px 10px">Copy</button>
+          </div>
+        </div>
+        <p class="tiny muted" style="margin-top:8px">Amount: <strong>PKR 999</strong> — Reference code shown in the Verify page.</p>
+      </div>
+    </section>
 
-      <input type="file" accept="image/*" required>
+    <!-- PRICING -->
+    <section id="pricing" class="section">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="h3">One-time Access</div>
+            <div class="price">PKR 999</div>
+            <div class="muted">Access premium tasks & priority payouts</div>
+          </div>
+          <div style="min-width:140px">
+            <button id="payFromPricing" class="btn full">Pay Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      <button type="submit">Continue</button>
-    </form>
+    <!-- VERIFY -->
+    <section id="verify" class="section">
+      <div class="h3">Verify Payment</div>
+      <div class="grid" style="grid-template-columns:1fr;gap:10px">
+        <div class="card">
+          <form id="verifyForm">
+            <div class="field">
+              <label>Full name</label>
+              <input class="input" name="name" required placeholder="e.g., Ali Khan" />
+            </div>
+            <div class="field">
+              <label>Phone (WhatsApp)</label>
+              <input class="input" name="phone" required placeholder="03XXXXXXXXX" />
+            </div>
+            <div class="field">
+              <label>Transaction ID</label>
+              <input class="input mono" name="txid" required placeholder="e.g., TX123ABC" />
+            </div>
+            <div class="field">
+              <label>Amount (PKR)</label>
+              <input class="input" name="amount" type="number" value="999" required />
+            </div>
+            <div class="field">
+              <label>Receipt screenshot (optional)</label>
+              <input class="input" name="receipt" type="file" accept="image/*" />
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">
+              <button type="submit" class="btn">Submit & Unlock</button>
+              <div class="muted" style="font-size:13px">We save access locally (demo). Real verification needs a backend.</div>
+            </div>
+            <div id="verifyMsg" style="margin-top:10px"></div>
+          </form>
+        </div>
+      </div>
+    </section>
 
-    <p class="note">💡 Refer your friend & you both earn $2 instantly!</p>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="section">
+      <div class="h3">Member Dashboard</div>
+      <div id="lockNotice" class="card center">
+        <div class="muted">Access locked. Please pay (JazzCash: <span class="mono">03054444527</span>) and verify to unlock.</div>
+      </div>
+
+      <div id="dashContent" class="hidden">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="h3">Available tasks</div>
+              <div class="muted">Complete tasks to earn — mock demo.</div>
+            </div>
+            <div class="mono" id="balance">PKR 0</div>
+          </div>
+          <table class="tasks" style="width:100%;margin-top:12px">
+            <tbody id="tasksBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TERMS -->
+    <section class="section">
+      <div class="card">
+        <div class="h3">Terms</div>
+        <ul class="muted">
+          <li>This is a frontend demo. Real verification and refunds require server-side logic.</li>
+          <li>Never share OTPs or sensitive credentials.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container footer">
+        <div>© <span id="yr"></span> TaskRewards</div>
+        <div class="muted">Status: <span id="statusTag">Locked</span></div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Bottom nav for mobile (Android friendly) -->
+  <div class="bottom-nav" role="navigation" aria-label="Quick actions">
+    <button class="bn-item active" data-target="home" id="bn-home">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11.5L12 4l9 7.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 22V12h14v10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div>Home</div>
+    </button>
+    <button class="bn-item" data-target="pricing" id="bn-pay">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div>Pay</div>
+    </button>
+    <button class="bn-item" data-target="dashboard" id="bn-dash">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13h8V3H3v10zM13 21h8v-6h-8v6zM13 3v6h8V3h-8z" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div>Dashboard</div>
+    </button>
   </div>
+
+  <!-- Pay Modal (hidden by default) -->
+  <div id="payModal" class="modal-backdrop hidden" role="dialog" aria-hidden="true">
+    <div class="modal card" role="document">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="h3">Pay via JazzCash</div>
+        <button id="closePay" class="btn ghost" style="padding:8px 10px;max-width:120px">Close</button>
+      </div>
+      <div style="margin-top:12px">
+        <div class="muted">Send</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+          <div>
+            <div class="mono">03054444527</div>
+            <div class="muted">JazzCash Wallet</div>
+          </div>
+          <div style="min-width:120px">
+            <button id="copyBtn2" class="btn">Copy</button>
+          </div>
+        </div>
+        <div class="muted" style="margin-top:8px">Amount: <strong>PKR 999</strong></div>
+        <div style="margin-top:10px">
+          <label class="muted">Reference code (use in notes)</label>
+          <div class="input mono" id="refCode" style="margin-top:6px">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Lightweight helpers and safe localStorage wrapper
+    const $ = (s, sc=document) => sc.querySelector(s);
+    const $$ = (s, sc=document) => Array.from(sc.querySelectorAll(s));
+    const store = {
+      set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},
+      get(k){try{return JSON.parse(localStorage.getItem(k));}catch{return null}
+      },
+      del(k){try{localStorage.removeItem(k);}catch(e){}}
+    };
+
+    // Clipboard copy with fallback
+    function copyText(text){
+      if(!text) return;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(()=>flashCopy());
+      }else{
+        // fallback for file:// or older webviews
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); flashCopy(); }catch(err){ alert('Copy failed — please copy manually: '+text); }
+        ta.remove();
+      }
+      function flashCopy(){
+        const old = document.activeElement;
+        const btns = $$('#copyBtn, #copyBtn2');
+        btns.forEach(b=>{ const t = b.textContent; b.textContent='Copied'; setTimeout(()=>b.textContent=t,1100); });
+        if(old) old.focus();
+      }
+    }
+
+    // Generate reference code per session
+    function genRef(){
+      let ref = store.get('refCode');
+      if(!ref){ ref = 'TR-'+Math.random().toString(36).slice(2,7).toUpperCase(); store.set('refCode', ref); }
+      return ref;
+    }
+
+    // Render tasks (mock)
+    function initTasks(){
+      const tasks = [
+        {title:'App review (Play Store)', payout:120},
+        {title:'Instagram story share (24h)', payout:200},
+        {title:'Quick survey (3 min)', payout:150},
+        {title:'YouTube comment & like', payout:90}
+      ];
+      const tbody = $('#tasksBody'); if(!tbody) return;
+      tbody.innerHTML = '';
+      tasks.forEach((t, i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td style="width:66%">${t.title}</td><td style="width:18%">PKR ${t.payout}</td><td style="width:16%"><button class='btn' data-i='${i}' style='padding:8px 10px'>Start</button></td>`;
+        tbody.appendChild(tr);
+      });
+      // attach listeners
+      tbody.addEventListener('click', (ev)=>{
+        const btn = ev.target.closest('button'); if(!btn) return; const idx = btn.dataset.i; const t = tasks[Number(idx)];
+        if(!t) return; let bal = store.get('balance')||0; bal += t.payout; store.set('balance', bal); $('#balance').textContent = 'PKR '+bal; btn.textContent = 'Done'; btn.disabled = true; btn.classList.add('ghost');
+      });
+      $('#balance').textContent = 'PKR '+(store.get('balance')||0);
+    }
+
+    // Render UI state based on paidAccess
+    function renderStatus(){
+      const acc = store.get('paidAccess');
+      const unlocked = !!acc;
+      $('#statusTag').textContent = unlocked ? 'Unlocked' : 'Locked';
+      $('#lockNotice').classList.toggle('hidden', unlocked);
+      $('#dashContent').classList.toggle('hidden', !unlocked);
+      // show txid if available
+      if(unlocked && acc.txid){
+        let el = document.getElementById('vx');
+        if(!el){ el = document.createElement('div'); el.id='vx'; el.className='muted mono'; document.querySelector('#dashboard .card .h3')?.insertAdjacentElement('afterend', el); }
+        el.textContent = 'Verified TX: '+acc.txid;
+      }
+    }
+
+    // Safe DOM onload
+    (function(){
+      // Year
+      $('#yr').textContent = new Date().getFullYear();
+
+      // populate ref
+      const ref = genRef(); $('#refCode').textContent = ref;
+
+      // copy buttons
+      $('#copyBtn')?.addEventListener('click', ()=>copyText($('#jcNumber').textContent.trim()));
+      $('#copyBtn2')?.addEventListener('click', ()=>copyText($('#jcNumber').textContent.trim()));
+
+      // modal open/close
+      const openPay = ()=>{ $('#payModal').classList.remove('hidden'); $('#payModal').setAttribute('aria-hidden','false'); }
+      const closePay = ()=>{ $('#payModal').classList.add('hidden'); $('#payModal').setAttribute('aria-hidden','true'); }
+      $('#ctaPay')?.addEventListener('click', openPay);
+      $('#payFromPricing')?.addEventListener('click', openPay);
+      $('#closePay')?.addEventListener('click', closePay);
+      // close modal on backdrop click
+      $('#payModal')?.addEventListener('click', (e)=>{ if(e.target === $('#payModal')) closePay(); });
+
+      // verify form (client-side demo)
+      $('#verifyForm')?.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const fd = new FormData(e.target); const data = Object.fromEntries(fd.entries());
+        if(!data.txid || !data.amount){ $('#verifyMsg').innerHTML = '<div style="color:#ff6b6b">Please enter Transaction ID and amount.</div>'; return; }
+        if(Number(data.amount) < 999){ $('#verifyMsg').innerHTML = '<div style="color:#ff6b6b">Amount should be PKR 999.</div>'; return; }
+        // save local access (demo)
+        store.set('paidAccess', {name:data.name||'', phone:data.phone||'', txid:data.txid, ref:ref, t:Date.now()});
+        $('#verifyMsg').innerHTML = '<div style="color:#a3f7c4">Submitted. Dashboard unlocked on this device.</div>';
+        renderStatus();
+        // go to dashboard
+        setTimeout(()=>{ document.getElementById('bn-dash')?.click(); },400);
+      });
+
+      // bottom nav actions
+      $$('#bn-home, #bn-pay, #bn-dash').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          $$('#bn-home, #bn-pay, #bn-dash').forEach(x=>x.classList.remove('active'));
+          btn.classList.add('active');
+          const t = btn.dataset.target || (btn.id==='bn-pay'?'pricing':(btn.id==='bn-dash'?'dashboard':'home'));
+          if(t==='home') window.scrollTo({top:0,behavior:'smooth'});
+          else{
+            const el = document.getElementById(t); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+          // open modal for pay
+          if(btn.id==='bn-pay') openPay();
+        });
+      });
+
+      // Load initial state
+      renderStatus(); initTasks();
+
+      // friendly note: clipboard may be blocked on file://. Use a local server or host the file.
+    })();
+  </script>
 </body>
 </html>
